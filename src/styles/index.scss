@@ -1,6 +1,9 @@
 @import '~normalize-scss/sass/normalize/import-now';
+@import 'breakpoints';
 @import 'colors';
 @import 'typography';
+@import 'vars';
+@import 'grid';
 
 *,
 *::before,
@@ -38,7 +41,7 @@ ul {
 }
 
 body {
-  font-family: Roboto, Arial, sans-serif;
+  font-family: $font--base;
   font-size: 1rem;
   line-height: 1;
   color: $color--black;
@@ -75,12 +78,123 @@ body {
 
 .container {
   width: auto;
-  max-width: 1120px;
-  margin: 0 auto;
+  margin: $spacer * 2;
   box-sizing: content-box;
+
+  @include lg {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
 }
 
 .footer {
   padding: 100px 0 0;
   opacity: 1;
+}
+
+.nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: $spacer * 4 0;
+  background: rgba($color--white, 0.2);
+  backdrop-filter: blur(4px);
+
+  &__action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    background: $color--violet;
+    border-radius: 50%;
+    border: 0;
+    color: $color--white;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: 0.5s all;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+}
+
+.note {
+  position: relative;
+  margin-bottom: $spacer * 2;
+  border-radius: 5px;
+
+  &__action {
+    position: absolute;
+    top: $spacer / 2;
+    right: $spacer / 2;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    color: currentColor;
+    transition: 0.5s all;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+
+  &__toggle {
+    padding: $spacer * 3;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    color: inherit;
+    text-align: left;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  &.violet {
+    background: $color--violet;
+    color: $color--white;
+  }
+
+  &.white {
+    background: $color--white-pink;
+    color: $color--violet;
+  }
+
+  &.black {
+    background: $color--black;
+    color: $color--white;
+  }
+}
+
+.edit-form {
+  &__input {
+    background: transparent;
+    color: inherit;
+    width: 100%;
+    padding: $spacer * 2;
+    border: 0;
+  }
+
+  &__footer {
+    display: flex;
+    width: 100%;
+  }
+
+  &__action {
+    width: 50%;
+    background: transparent;
+    color: inherit;
+    text-align: center;
+    border: 0;
+    padding: $spacer / 2 0;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
 }
