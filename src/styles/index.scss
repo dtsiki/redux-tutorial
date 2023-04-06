@@ -77,6 +77,7 @@ body {
 }
 
 .container {
+  position: relative;
   width: auto;
   margin: $spacer * 2;
   box-sizing: content-box;
@@ -97,13 +98,27 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  display: flex;
-  justify-content: center;
-  padding: $spacer * 4 0;
+  height: 70 + $spacer * 3 * 2;
   background: rgba($color--white, 0.2);
   backdrop-filter: blur(4px);
+  z-index: 101;
+
+  &.opened {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba($color--white, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 99;
+  }
 
   &__action {
+    position: fixed;
+    left: calc(50% - 35px);
+    bottom: $spacer * 3;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -120,7 +135,19 @@ body {
     &:hover {
       transform: scale(1.2);
     }
+
+    &.close {
+      transform: rotate(45deg);
+
+      &:hover {
+        transform: rotate(45deg) scale(1.2);
+      }
+    }
   }
+}
+
+.notes {
+  margin-bottom: $spacer * 4;
 }
 
 .note {
@@ -169,20 +196,32 @@ body {
     background: $color--black;
     color: $color--white;
   }
+
+  &.grey {
+    background: $color--grey;
+    color: $color--black;
+  }
+
+  &.white-violet {
+    background: $color--white-violet;
+    color: $color--violet;
+  }
 }
 
-.edit-form {
+.form {
   &__input {
     background: transparent;
     color: inherit;
     width: 100%;
     padding: $spacer * 2;
     border: 0;
+    border-bottom: 1px solid currentColor;
   }
 
   &__footer {
     display: flex;
     width: 100%;
+    padding-top: $spacer;
   }
 
   &__action {
@@ -196,5 +235,95 @@ body {
     font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
+  }
+
+  &.edit-note {
+    padding-bottom: $spacer;
+  }
+
+  &.new-note {
+    position: fixed;
+    left: calc(50% - 150px);
+    bottom: -200px;
+    color: $color--white;
+    width: 300px;
+    border-radius: 5px;
+    padding-bottom: $spacer;
+    background: $color--violet;
+    transition: 0.5s all;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 100;
+
+    &.visible {
+      bottom: 180px;
+      pointer-events: unset;
+      opacity: 1;
+    }
+
+    &::after {
+      position: absolute;
+      left: calc(50% - 20px);
+      bottom: -20px;
+      content: '';
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 20px 20px 0 20px;
+      border-color: $color--violet transparent transparent transparent;
+    }
+  }
+}
+
+.not-scroll {
+  overflow: hidden;
+}
+
+.notification {
+  color: $color--grey-darker;
+}
+
+.color-picker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $spacer 0 0;
+
+  &__item {
+    + .color-picker__item {
+      margin-left: 10px;
+    }
+  }
+
+  &__color {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid $color--white-darker;
+    cursor: pointer;
+
+    &.violet {
+      background: $color--violet;
+    }
+
+    &.white {
+      background: $color--white-pink;
+    }
+
+    &.black {
+      background: $color--black;
+    }
+
+    &.grey {
+      background: $color--grey;
+    }
+
+    &.white-violet {
+      background: $color--white-violet;
+    }
+
+    &.selected {
+      outline: 2px dotted $color--white-pink;
+    }
   }
 }

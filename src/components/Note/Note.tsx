@@ -1,19 +1,25 @@
-import React, { ReactElement, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import { INote } from '../../interfaces';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useAppDispatch } from '../../store/hooks';
+import { deleteNote, updateNote } from '../../store/actions';
+import ColorPicker from '../ColorPicker';
+import { NoteVariant } from '../../enums';
 
 interface NoteProps {
   note: INote;
 }
 
-const Note = ({ note }: NoteProps): ReactElement => {
+const Note = ({ note }: NoteProps): React.ReactElement => {
   const { id, text, variant } = note;
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [localText, setLocalText] = useState<string>(text);
+  const [selectedVariant, setSelectedVariant] = useState<NoteVariant>(variant);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -22,11 +28,20 @@ const Note = ({ note }: NoteProps): ReactElement => {
   }, [inputRef, isEditing]);
 
   const onDeleteClicked = (): void => {
-    // delete note by id
+    dispatch(deleteNote(id));
   };
 
   const onUpdateClicked = (): void => {
-    // update note
+    dispatch(
+      updateNote({
+        id,
+        variant: selectedVariant,
+        text: localText
+      })
+    );
+
+    setIsEditing(false);
+    setLocalText(text);
   };
 
   const changeText = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
@@ -40,6 +55,10 @@ const Note = ({ note }: NoteProps): ReactElement => {
     e.target.value = temp;
   };
 
+  const changeVariant = (variant: NoteVariant): void => {
+    setSelectedVariant(variant);
+  };
+
   return (
     <div className={`note ${variant}`}>
       {!isEditing && (
@@ -51,23 +70,27 @@ const Note = ({ note }: NoteProps): ReactElement => {
         </button>
       )}
       {isEditing ? (
-        <div className='note__form edit-form'>
+        <div className='form edit-note'>
           <textarea
-            className='edit-form__input'
+            className='form__input'
             value={localText}
             onChange={changeText}
             rows={4}
             ref={inputRef}
             onFocus={moveCaretAtEnd}
           />
-          <div className='edit-form__footer'>
+          <ColorPicker
+            currentVariant={selectedVariant}
+            handleVariant={changeVariant}
+          />
+          <div className='form__footer'>
             <button
-              className='edit-form__action'
+              className='form__action'
               onClick={() => setIsEditing(false)}>
               Cancel
             </button>
             <button
-              className='edit-form__action'
+              className='form__action'
               onClick={onUpdateClicked}>
               Update
             </button>
